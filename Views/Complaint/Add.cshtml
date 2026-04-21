@@ -1,0 +1,119 @@
+﻿@model Hostel_Consume_2026.Models.ComplaintModel
+
+@{
+    ViewData["Title"] = Model.Complaint_id == 0 ? "Add Complaint" : "Edit Complaint";
+}
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+
+        <!-- CARD HEADER -->
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                ← Back
+            </a>
+
+            <h4 class="mb-0 text-white">
+                @(Model.Complaint_id == 0 ? "Add New Complaint" : "Edit Complaint")
+            </h4>
+
+        </div>
+
+        <!-- CARD BODY -->
+        <div class="card-body">
+
+            <form asp-action="Add" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Complaint_id" />
+
+                <!-- Validation -->
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+
+                    <!-- Student ID -->
+                    <div class="col-md-6">
+                        <label asp-for="Student_id" class="form-label"></label>
+                        <input asp-for="Student_id" class="form-control" />
+                        <span asp-validation-for="Student_id" class="text-danger"></span>
+                    </div>
+
+                    <!-- Complaint Type -->
+                    <div class="col-md-6">
+                        <label asp-for="ComplaintType" class="form-label"></label>
+                        <input asp-for="ComplaintType" class="form-control" />
+                        <span asp-validation-for="ComplaintType" class="text-danger"></span>
+                    </div>
+
+                    <!-- Complaint Details -->
+                    <div class="col-md-12">
+                        <label asp-for="ComplaintDetails" class="form-label"></label>
+                        <textarea asp-for="ComplaintDetails" class="form-control"></textarea>
+                        <span asp-validation-for="ComplaintDetails" class="text-danger"></span>
+                    </div>
+
+                    <!-- Complaint Date -->
+                    <div class="col-md-6">
+                        <label asp-for="ComplaintDate" class="form-label"></label>
+                        <input asp-for="ComplaintDate" type="date" class="form-control" />
+                        <span asp-validation-for="ComplaintDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label"></label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="">Select Status</option>
+                            <option>Pending</option>
+                            <option>In Progress</option>
+                            <option>Resolved</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <!-- Action Taken -->
+                    <div class="col-md-12">
+                        <label asp-for="ActionTaken" class="form-label"></label>
+                        <textarea asp-for="ActionTaken" class="form-control"></textarea>
+                        <span asp-validation-for="ActionTaken" class="text-danger"></span>
+                    </div>
+
+                    <!-- Resolved Date -->
+                    <div class="col-md-6">
+                        <label asp-for="ResolvedDate" class="form-label"></label>
+                        <input asp-for="ResolvedDate" type="date" class="form-control" />
+                        <span asp-validation-for="ResolvedDate" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="mt-4 text-end">
+
+                    <a asp-action="Index" class="btn btn-secondary me-2">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        @(Model.Complaint_id == 0 ? "Save Complaint" : "Update Complaint")
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

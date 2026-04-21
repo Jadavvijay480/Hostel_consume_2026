@@ -1,0 +1,100 @@
+﻿@model Hostel_Consume_2026.Models.RoomModel
+
+@{
+    ViewData["Title"] = Model.Room_id == 0 ? "Add Room" : "Edit Room";
+}
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+
+        <!-- CARD HEADER -->
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+
+            <!-- BACK BUTTON -->
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                ← Back
+            </a>
+
+            <h4 class="mb-0 text-white">
+                @(Model.Room_id == 0 ? "Add New Room" : "Edit Room")
+            </h4>
+
+        </div>
+
+        <!-- CARD BODY -->
+        <div class="card-body">
+            <form asp-action="Add" method="post">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Room_id" />
+
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label asp-for="Room_number" class="form-label"></label>
+                        <input asp-for="Room_number" class="form-control" />
+                        <span asp-validation-for="Room_number" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Room_type" class="form-label"></label>
+                        <select asp-for="Room_type" class="form-select">
+                            <option value="">Select</option>
+                            <option>Single</option>
+                            <option>Double</option>
+                            <option>Dorm</option>
+                        </select>
+                        <span asp-validation-for="Room_type" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Capacity" class="form-label"></label>
+                        <input asp-for="Capacity" type="number" class="form-control" />
+                        <span asp-validation-for="Capacity" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label"></label>
+                        <select asp-for="Status" class="form-select">
+                            <option>Available</option>
+                            <option>Occupied</option>
+                            <option>Maintenance</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Student_id" class="form-label"></label>
+                        <input asp-for="Student_id" class="form-control" />
+                        <span asp-validation-for="Student_id" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Hostel_id" class="form-label"></label>
+                        <input asp-for="Hostel_id" class="form-control" />
+                        <span asp-validation-for="Hostel_id" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a asp-action="Index" class="btn btn-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-success">
+                        @(Model.Room_id == 0 ? "Save Room" : "Update Room")
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

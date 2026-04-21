@@ -1,0 +1,315 @@
+﻿@model IEnumerable<Hostel_Consume_2026.Models.AdminModel>
+
+@{
+    ViewData["Title"] = "Admin List";
+}
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<html>
+    <head>
+    <style>
+        .highlight {
+            background-color: white;
+            color: red;
+        }
+    </style>
+    </head>
+    <body>
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+
+            <!-- CARD HEADER -->
+            <div class="card-header bg-success text-white">
+                <div class="row align-items-center">
+
+                    <!-- LEFT : Title -->
+                    <div class="col-md-4">
+                        <h4 class="mb-0 text-white">👨‍💼 Admin Record</h4>
+                    </div>
+
+                    <!-- CENTER : Search -->
+                    <div class="col-md-4 text-center">
+                        <div class="input-group input-group-sm justify-content-center" style="max-width: 300px;">
+                            <input type="text"
+                                   class="form-control"
+                                   id="searchInput"
+                                   placeholder="Search Admin">
+                            <button class="btn btn-light" type="button" id="searchBtn">🔍</button>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT : Buttons -->
+                    <div class="col-md-4 text-end">
+                        <a asp-action="ExportToExcel" class="btn btn-light btn-sm me-2">⬇ Excel</a>
+                        <a asp-action="Add" class="btn btn-light btn-sm">+ Add New Admin</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CARD BODY -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle text-center" id="adminTable">
+
+                        <thead class="table-secondary">
+                            <tr>
+
+                                <th>Admin ID</th>
+                                <th>FirstName</th>
+                                <th>LastName</th>
+                                <th>Gender</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>JoinDate</th>
+                                <th>ExpYear</th>
+                                <th>Status</th>
+                                <th>CreatedAt</th>
+
+                                <th width="190">Actions</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var admin in Model)
+                                {
+                                    <tr>
+
+                                        <td>@admin.Admin_id</td>
+                                        <td>@admin.FirstName </td>
+                                        <td>@admin.LastName</td>
+                                        <td>@admin.Gender</td>
+                                        <td>@admin.Phone</td>
+                                        <td>@admin.Email</td>
+                                        <td>@admin.Address</td>
+                                        <td>@admin.JoiningDate.ToString("dd-MM-yyyy")</td>
+                                        <td>@admin.ExperienceYears</td>
+
+
+
+                                        <td>
+
+                                            <span class="badge @(admin.Status ? "bg-success" : "bg-danger")">
+
+                                                @(admin.Status ? "Active" : "Inactive")
+
+                                            </span>
+
+                                        </td>
+                                        <td>@admin.CreatedAt</td>
+
+                                        <td>
+                                            <div class="d-flex justify-content-center gap-2">
+
+                                                <a asp-action="Edit"
+                                                   asp-route-Admin_id="@admin.Admin_id"
+                                                   class="btn btn-warning btn-sm">
+                                                    ✏ Edit
+                                                </a>
+
+                                                <form asp-action="Delete"
+                                                      asp-route-Admin_id="@admin.Admin_id"
+                                                      method="post"
+                                                      class="m-0 delete-form">
+
+                                                    <button type="button"
+                                                            class="btn btn-danger btn-sm delete-btn">
+                                                        🗑 Delete
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+
+                                    <td colspan="9"
+                                        class="text-muted">
+
+                                        No admin records found.
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+
+            <!-- FOOTER -->
+            <div class="card-footer text-muted text-center">
+
+                Total Admin : @(Model?.Count() ?? 0)
+
+            </div>
+
+        </div>
+
+
+        <!-- Back To Top -->
+        <button id="backToTopBtn"
+                class="btn btn-outline-success btn-lg"
+                style="position: fixed; bottom: 40px; right: 40px; display: none; border-radius: 50%;">
+
+            ⬆
+
+        </button>
+
+    </div>
+    
+
+    @* JS *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Swal.fire({
+                title: "Success!",
+                text: "@TempData["Success"]",
+                icon: "success",
+                position: "top",
+                timer: 2000, // ⏱ auto close in 2 sec
+                showConfirmButton: false
+            });
+        </script>
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const backToTopBtn = document.getElementById("backToTopBtn");
+
+            // Show button after scrolling down 200px
+            window.onscroll = function() {
+                if (document.body.scrollTop > 40 || document.documentElement.scrollTop > 40) {
+                    backToTopBtn.style.display = "block";
+                } else {
+                    backToTopBtn.style.display = "none";
+                }
+            };
+
+            // Smooth scroll to top on click
+            backToTopBtn.addEventListener("click", function() {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        });
+    </script>
+
+    <!-- SEARCH + HIGHLIGHT SCRIPT FOR  -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const searchInput = document.getElementById("searchInput");
+            const searchBtn = document.getElementById("searchBtn");
+            const table = document.getElementById("adminTable"); // ✅ correct id
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rows = tbody.getElementsByTagName("tr");
+
+            function searchTable() {
+
+                const filter = searchInput.value.toLowerCase();
+
+                for (let i = 0; i < rows.length; i++) {
+
+                    const cells = rows[i].getElementsByTagName("td");
+                    let rowText = "";
+
+                    // reset highlight + build text
+                    for (let c = 0; c < cells.length - 1; c++) {
+
+                        cells[c].innerHTML = cells[c].innerText;
+
+                        rowText += cells[c].innerText.toLowerCase() + " ";
+                    }
+
+                    if (rowText.includes(filter)) {
+
+                        rows[i].style.display = "";
+
+                        // highlight
+                        if (filter.length > 0) {
+
+                            for (let c = 0; c < cells.length - 1; c++) {
+
+                                const regex = new RegExp(`(${filter})`, "gi");
+
+                                // cells[c].innerHTML =
+                                //     cells[c].innerText.replace(regex, "<mark>$1</mark>");
+                                cells[c].innerHTML = cells[c].innerText.replace(regex, "<span class='highlight'>$1</span>");
+                            }
+                        }
+
+                    }
+                    else {
+
+                        rows[i].style.display = "none";
+
+                    }
+
+                }
+
+            }
+
+            searchInput.addEventListener("keyup", searchTable);
+
+            searchBtn.addEventListener("click", searchTable);
+
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", function () {
+
+                let form = this.closest("form");
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You want to delete this admin!",
+                    icon: "warning",
+                    position: "top", // 👈 popup at top
+                    showCancelButton: true,
+                    confirmButtonColor: "#28a745",
+                    cancelButtonColor: "#dc3545",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+
+            });
+        });
+    </script>
+
+    </body>
+</html>
+
+
+
+
+
+
+

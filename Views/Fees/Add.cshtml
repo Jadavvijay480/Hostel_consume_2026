@@ -1,0 +1,104 @@
+﻿@model Hostel_Consume_2026.Models.FeesModel
+
+@{
+    ViewData["Title"] = Model.Fee_id == 0 ? "Add Fee" : "Edit Fee";
+}
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+
+        <!-- CARD HEADER -->
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+
+            <!-- BACK BUTTON -->
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                ← Back
+            </a>
+
+            <h4 class="mb-0 text-white">
+                @(Model.Fee_id == 0 ? "Add New Fee" : "Edit Fee")
+            </h4>
+
+        </div>
+
+        <!-- CARD BODY -->
+        <div class="card-body">
+            <form asp-action="Add" method="post">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Fee_id" />
+
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label asp-for="Student_id" class="form-label"></label>
+                        <input asp-for="Student_id" class="form-control" />
+                        <span asp-validation-for="Student_id" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Amount" class="form-label"></label>
+                        <input asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Fee_month" class="form-label"></label>
+                        <select asp-for="Fee_month" class="form-select">
+                            <option value="">Select Month</option>
+                            <option>January</option>
+                            <option>February</option>
+                            <option>March</option>
+                            <option>April</option>
+                            <option>May</option>
+                            <option>June</option>
+                            <option>July</option>
+                            <option>August</option>
+                            <option>September</option>
+                            <option>October</option>
+                            <option>November</option>
+                            <option>December</option>
+                        </select>
+                        <span asp-validation-for="Fee_month" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Due_date" class="form-label"></label>
+                        <input asp-for="Due_date" type="date" class="form-control" />
+                        <span asp-validation-for="Due_date" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label"></label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="">Select</option>
+                            <option>Pending</option>
+                            <option>Paid</option>
+                            <option>Cancelled</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a asp-action="Index" class="btn btn-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-success">
+                        @(Model.Fee_id == 0 ? "Save Fee" : "Update Fee")
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

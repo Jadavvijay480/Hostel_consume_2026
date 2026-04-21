@@ -1,0 +1,183 @@
+﻿@{
+	Layout = null;
+}
+
+@model Hostel_Consume_2026.Models.UserModel
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Hostel-ERP/Register</title>
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+	<meta name="author" content="Xiaoying Riley at 3rd Wave Media">
+	<link rel="shortcut icon" href="~/color-scheme.png">
+   
+	<!-- FontAwesome JS-->
+	@* <script defer src="assets/plugins/fontawesome/js/all.min.js"></script> *@
+	<script src="~/plugins/fontawesome/js/all.min.js"></script>
+	<!-- App CSS -->
+	<link id="theme-style" rel="stylesheet" href="~/css/portal.css">
+  
+</head>
+
+<body class="app app-signup p-0">
+	<div class="row g-0 app-auth-wrapper">
+		<div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
+			<div class="d-flex flex-column align-content-end">
+				<div class="app-auth-body mx-auto">
+					<div class="app-auth-branding mb-4">
+						<a class="app-logo" >
+							<img class="logo-icon me-2" src="~/images/app-logo.svg" alt="logo">
+						</a>
+					</div>
+					<h2 class="auth-heading text-center mb-4">Sign Up to Hostel-ERP</h2>
+
+					<div class="auth-form-container text-start mx-auto">
+						@if (ViewBag.Error != null)
+						{
+							<div class="alert alert-danger">@ViewBag.Error</div>
+						}
+
+
+						<form asp-action="Register" method="post" class="auth-form auth-signup-form">
+
+							<div class="mb-3">
+								<input asp-for="FullName" class="form-control" placeholder="Full Name" required />
+							</div>
+
+							<div class="mb-3">
+								<input asp-for="Email" class="form-control" placeholder="Email" required />
+							</div>
+
+							@* <div class="mb-3">
+								<input asp-for="Password" type="password" class="form-control" placeholder="Password" required />
+							</div> *@
+							<div class="password mb-3 position-relative">
+								<input asp-for="Password" type="password" id="passwordField"
+									   class="form-control" placeholder="Password" required />
+
+								<!-- Eye Icon -->
+								<i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3"
+								   id="togglePassword"
+								   style="cursor: pointer;"></i>
+							</div>
+
+							<div class="mb-3">
+								<input asp-for="MobileNo" class="form-control" placeholder="Mobile No" required />
+							</div>
+
+							<div class="mb-3">
+								<select asp-for="Role" class="form-control">
+									<option value="Developer">Developer</option>
+									<option value="Warden">Warden</option>
+									<option value="Student">Student</option>
+								</select>
+							</div>
+
+							<div class="text-center">
+								<button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">
+									Sign Up
+								</button>
+							</div>
+
+						</form>
+
+						@if (ViewBag.Error != null)
+						{
+							<div class="text-danger text-center mt-3">
+								@ViewBag.Error
+							</div>
+						}
+
+
+
+
+						<div class="text-center mt-3">
+							Already have an account?
+							<a asp-controller="Account" asp-action="Login">
+								Log in
+							</a>
+						</div>
+					</div><!--//auth-form-container-->
+
+
+
+				</div><!--//auth-body-->
+
+				
+
+			</div><!--//flex-column-->
+
+		
+			<footer class="app-footer bg-success text-white">
+				<div class="container text-center py-3">
+
+					<h6 class="mb-1">🏠 Hostel ERP Management System</h6>
+
+					<small>
+						Manage Students | Rooms | Fees | Visitors | Wardens
+					</small>
+
+					<br>
+
+					<small>
+						© 2026 All Rights Reserved | Developed by Vijay Jadav
+					</small>
+
+				</div>
+			</footer><!--//app-footer-->
+
+		</div><!--//auth-main-col-->
+		<div class="col-12 col-md-5 col-lg-6 h-100 auth-background-col">
+			<div class="auth-background-holder">
+			</div>
+			<div class="auth-background-mask"></div>
+			<div class="auth-background-overlay p-3 p-lg-5">
+				<div class="d-flex flex-column align-content-end h-100">
+					<div class="h-100"></div>
+					<div class="overlay-content p-3 p-lg-4 rounded">
+						<h5 class="mb-3 overlay-title">Hostel-ERP Register Portal</h5>
+						<div>
+			Hostel-ERP is a web-based management system that streamlines hostel operations including
+			students, rooms, wardens, visitors and fees management.
+							
+						</div>
+					</div>
+				</div>
+			</div><!--//auth-background-overlay-->
+		</div><!--//auth-background-col-->
+		
+
+	</div><!--//row-->
+	
+	<script>
+		const togglePassword = document.getElementById("togglePassword");
+		const passwordField = document.getElementById("passwordField");
+
+		togglePassword.addEventListener("click", function () {
+			const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+			passwordField.setAttribute("type", type);
+
+			// Toggle icon
+			this.classList.toggle("bi-eye");
+			this.classList.toggle("bi-eye-slash");
+		});
+	</script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,237 @@
+﻿@model IEnumerable<Hostel_Consume_2026.Models.RoomBookingModel>
+
+@{
+    ViewData["Title"] = "Room Booking List";
+}
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData["Success"] != null)
+{
+    <script>
+        Swal.fire({
+            title: "Success!",
+            text: "@TempData["Success"]",
+            icon: "success",
+            position: "top",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+    </script>
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+
+        <!-- CARD HEADER -->
+        <div class="card-header bg-success text-white">
+            <div class="row align-items-center">
+
+                <!-- LEFT -->
+                <div class="col-md-4">
+                    <h4 class="mb-0 text-white">📘 Room Booking Record</h4>
+                </div>
+
+                <!-- CENTER SEARCH -->
+                <div class="col-md-4 text-center">
+                    <div class="input-group input-group-sm justify-content-center" style="max-width: 300px;">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search Booking">
+                        <button class="btn btn-light" type="button" id="searchBtn">🔍</button>
+                    </div>
+                </div>
+
+                <!-- RIGHT BUTTONS -->
+                <div class="col-md-4 text-end">
+                    <a asp-action="ExportToExcel" class="btn btn-light btn-sm me-2">⬇ Excel</a>
+                    <a asp-action="Add" class="btn btn-light btn-sm">+ Add Booking</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center" id="bookingTable">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Guest Name</th>
+                            <th>Mobile</th>
+                            <th>Room No</th>
+                            <th>Address</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th width="190">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Booking_Id</td>
+                                    <td>@item.Guest_Name</td>
+                                    <td>@item.Mobile_No</td>
+                                    <td>@item.Room_Number</td>
+                                    <td>@item.Address</td>
+                                    <td>@item.Booking_Date.ToShortDateString()</td>
+                                    <td>
+                                        <span class="badge
+                                                    @(item.Booking_Status == "Booked" ? "bg-primary" :
+                                                                                            item.Booking_Status == "CheckedIn" ? "bg-success" :
+                                                                                            item.Booking_Status == "CheckedOut" ? "bg-warning text-dark" :
+                                                                                            "bg-danger")">
+                                    @item.Booking_Status
+                                </span>
+                            </td>
+                            @* <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a asp-action="Edit" asp-route-Booking_Id="@item.Booking_Id" class="btn btn-warning btn-sm">✏ Edit</a>
+                                    <form asp-action="Delete" asp-route-Booking_Id="@item.Booking_Id" method="post" class="m-0">
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete this booking?');">
+                                            🗑 Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td> *@
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+
+                                            <a asp-action="Edit" asp-route-Booking_Id="@item.Booking_Id"
+                                               class="btn btn-warning btn-sm">✏ Edit</a>
+
+                                            <form asp-action="Delete" asp-route-Booking_Id="@item.Booking_Id"
+                                                  method="post" class="m-0 delete-form">
+
+                                                <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                                    🗑 Delete
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    </td>
+                        </tr>
+                                                }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-muted">No booking records found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="card-footer text-muted text-center">
+            Total Bookings: @(Model?.Count() ?? 0)
+        </div>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button id="backToTopBtn" class="btn btn-outline-primary btn-lg"
+            style="position: fixed; bottom: 40px; right: 40px; display: none; z-index: 1000; border-radius: 50%;">
+        ⬆
+    </button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const searchInput = document.getElementById("searchInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const table = document.getElementById("bookingTable");
+        const rows = table.getElementsByTagName("tr");
+
+        function searchTable() {
+            const filter = searchInput.value.toLowerCase();
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td");
+                let text = "";
+
+                for (let c = 0; c < cells.length - 1; c++) {
+                    cells[c].innerHTML = cells[c].innerText;
+                    text += cells[c].innerText.toLowerCase() + " ";
+                }
+
+                if (text.includes(filter)) {
+                    rows[i].style.display = "";
+
+                    if (filter.length > 0) {
+                        for (let c = 0; c < cells.length - 1; c++) {
+                            const regex = new RegExp(`(${filter})`, "gi");
+                            // cells[c].innerHTML = cells[c].innerText.replace(regex, "<mark>$1</mark>");
+                            cells[c].innerHTML = cells[c].innerText.replace(regex, "<span class='highlight'>$1</span>");
+                        }
+                    }
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        searchInput.addEventListener("keyup", searchTable);
+        searchBtn.addEventListener("click", searchTable);
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("backToTopBtn");
+
+        window.onscroll = function () {
+            btn.style.display = (document.documentElement.scrollTop > 40) ? "block" : "none";
+        };
+
+        btn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    });
+</script>
+
+<script>
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+
+            let form = this.closest("form");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to delete this booking!",
+                icon: "warning",
+                position: "top",   // 👈 TOP POSITION
+                showCancelButton: true,
+                confirmButtonColor: "#28a745",
+                cancelButtonColor: "#dc3545",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+
+        });
+    });
+</script>
+
+<style>
+    .highlight {
+        background-color: white;
+        color: red;
+    }
+</style>
+
+
