@@ -104,9 +104,9 @@ This project is licensed under the MIT License.
 
 ## 📫 Contact
 
-* Developer: Your Name
-* Email: [your-email@example.com](mailto:your-email@example.com)
-* GitHub: https://github.com/your-username
+* Developer: Jadav Vijaykumar
+* Email: [jadavvilay@gmail.com](mailto:jadavvilay@gmail.com)
+* GitHub: https://github.com/Jadavvijay480
 
 ---
 
